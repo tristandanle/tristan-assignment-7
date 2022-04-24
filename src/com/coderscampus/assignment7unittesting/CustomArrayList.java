@@ -1,60 +1,56 @@
 package com.coderscampus.assignment7unittesting;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
 public class CustomArrayList<T> implements CustomList<T> {
 
 	private static final int MIN_CAPACITY = 10;
 	Object[] items = new Object[MIN_CAPACITY];
-	// int i = 0;
 	int size = 0;
 	Integer element = 0;
 
 	@Override
 	public boolean add(T item) {
-
-		if (items[size] == null || item != null) {
-			items[size++] = item;
-			return true;
-		}
-		return false;
+   
+		growArray();
+		items[size++] = item;
+		return true;
 	}
+
+
+	public void growArray() {
+		if(items.length == size) {
+            items =	Arrays.copyOf(items, items.length + 1);		
+		}
+	}
+
 
 	@Override
 	public boolean add(int index, T item) {
-		Object newArray[] = new Object[items.length + 1];
-		boolean added = false;
-		if (index < 0 || index > items.length) {
-			throw new IndexOutOfBoundsException("Index out of bounds" + index);
-		} else {
-
-			// copy elements of old array to new array
-			for (int i = 0; i < items.length; i++) {
-				newArray[i] = items[i];
-			}
-			// insert item to a specific index in newArray
-			newArray[index] = item;
-
-			// shuffle to the right
-			for (int i = index + 1; i <= items.length; i++) {
-				newArray[i] = items[i - 1];
-			}
-
-			// increase size to the old array items
-			items = new Object[newArray.length];
-
-			// copy elements of new array back to old array
-			for (int c = 0; c < items.length; c++) {
-				items[c] = newArray[c];
-				added = true;
-				// System.out.println(items[c]);
-			}
-			// increment 1 when an element is added every time
+       
+		if ( isValidIndex(index)) {
+			growArray();
+			System.arraycopy(items, index, items, index+1, items.length - index - 1);
+			items[index] = item;
 			size++;
+			return true;
+		} else {
+			System.out.println("Index out of bounds");
+			return false;
 		}
-		return added;
+	}
+	
+	public boolean isValidIndex(int index) {
+		try {
+			Objects.checkIndex(index, items.length);
+			
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+		
+		return true;
+		
 	}
 
 	@Override
@@ -63,30 +59,19 @@ public class CustomArrayList<T> implements CustomList<T> {
 		return size;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T get(int index) {
 		return (T) items[index];// (Integer) Arrays.asList(items).indexOf(index);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T remove(int index) throws IndexOutOfBoundsException {
-
-		try {
-			for (int i = 0; i < items.length; i++) {
-				if (i == index) {
-					element = (Integer) items[index];
-					for (int j = i; j < items.length - 1; j++) {
-						items[j] = items[i + 1];
-					}
-					break;
-				}
-
-			}
-
-		} catch (IndexOutOfBoundsException e) {
-			e.printStackTrace();
-		}
-		size--;
+        Object element = items[index];
+		items = Arrays.copyOf(items, items.length - 1);		
+		System.arraycopy(items, index +1 , items, index, items.length -  index - 1);
+		size--;	
 		return (T) element;
 	}
 }
