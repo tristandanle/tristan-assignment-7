@@ -68,7 +68,7 @@ public class CustomArrayList<T> implements CustomList<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T remove(int index) throws IndexOutOfBoundsException {
-        Object element = items[index];
+        	Object element = items[index];
 		System.arraycopy(items, index +1 , items, index, items.length -  index - 1);
 		size--;	
 		return (T) element;
