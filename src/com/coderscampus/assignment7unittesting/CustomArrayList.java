@@ -69,8 +69,8 @@ public class CustomArrayList<T> implements CustomList<T> {
 	@Override
 	public T remove(int index) throws IndexOutOfBoundsException {
         Object element = items[index];
-		items = Arrays.copyOf(items, items.length - 1);		
 		System.arraycopy(items, index +1 , items, index, items.length -  index - 1);
+		items = Arrays.copyOf(items, items.length - 1);	
 		size--;	
 		return (T) element;
 	}
