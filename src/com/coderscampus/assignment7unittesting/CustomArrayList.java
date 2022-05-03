@@ -1,65 +1,71 @@
 package com.coderscampus.assignment7unittesting;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
 
-import org.junit.jupiter.api.Test;
+public class CustomArrayList<T> implements CustomList<T> {
 
-class CustomArrayListTest {
+	private static final int MIN_CAPACITY = 10;
+	Object[] items = new Object[MIN_CAPACITY];
+	int size = 0;
 
-	@Test
-	void should_add_new_item_to_list() {
-		List<Integer> list = new ArrayList<>();
-		CustomList<Integer> sut = new CustomArrayList<>();
-		for ( int i = 0; i < 10 ; i ++   ) {
-			sut.add(i);
-		}
-		sut.add(2,2000);
-		sut.add(3,3000);
-		
-		Integer expectedResult = sut.get(0);
-
-		// assertEquals(10, sut.get(0));
-		assertEquals(0, expectedResult);
-		assertEquals(2000, sut.get(2));
-		assertEquals(12, sut.getSize());
+	@Override
+	public boolean add(T item) {
+   
+		growArray();
+		items[size++] = item;
+		return true;
 	}
 
-	
-	@Test
-	void should_remove_item_to_list() {
 
-		CustomList<Integer> sut = new CustomArrayList<>();
-		for ( int i = 0; i < 10 ; i ++   ) {
-			sut.add(i);
+	public void growArray() {
+		if(items.length == size) {
+            items =	Arrays.copyOf(items, items.length * 2);		
 		}
-		
-		sut.add(6,66);
-		sut.add(7,77);
-		// Index out of bound
-		// sut.add(34,87);
-		Integer expectedResult1 = sut.remove(3);
-		
-		assertEquals(3, expectedResult1);
-		assertEquals(11, sut.getSize());
-		
 	}
 
-	
-	@Test
-	void should_add_item_at_index_to_list() {
-		
-		CustomList<Integer> sut = new CustomArrayList<>();
 
-		for ( int i = 0; i < 10 ; i ++   ) {
-			sut.add(i);
+	@Override
+	public boolean add(int index, T item) {
+       
+		if ( isValidIndex(index)) {
+			growArray();
+			System.arraycopy(items, index, items, index+1, items.length - index - 1);
+			items[index] = item;
+			size++;
+			return true;
+		} else {
+			System.out.println("Index out of bound");
+			return false;
 		}
-		
-		sut.add(4,56);
-		sut.add(6,66);
-		
-		assertEquals(56, sut.get(4));
-		assertEquals(2, sut.getSize());
+	}
+	
+	public boolean isValidIndex(int index) {
+		try {
+			Objects.checkIndex(index, items.length);
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int getSize() {
+		return size;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public T get(int index) {
+		return (T) items[index];
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public T remove(int index) throws IndexOutOfBoundsException {
+        Object element = items[index];
+		System.arraycopy(items, index +1 , items, index, items.length -  index - 1);
+		size--;	
+		return (T) element;
 	}
 }
