@@ -1,71 +1,88 @@
 package com.coderscampus.assignment7unittesting;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
 
-import org.junit.jupiter.api.Test;
+public class CustomArrayList<T> implements CustomList<T> {
 
-class CustomArrayListTest {
+	private static final int MIN_CAPACITY = 10;
+	Object[] items = new Object[MIN_CAPACITY];
+	int size = 0;
 
-	@Test
-	void should_add_new_item_to_list() {
-		CustomList<Integer> sut = new CustomArrayList<>();
-		for ( int i = 0; i < 10 ; i ++   ) {
-			sut.add(i);
-		}
-		sut.add(2,2000);
-		sut.add(3,3000);
+	@Override
+	public boolean add(T item) {
 		
-		Integer expectedResult = sut.get(0);
-
-		// assertEquals(10, sut.get(0));
-		assertEquals(0, expectedResult);
-		assertEquals(2000, sut.get(2));
-		assertEquals(12, sut.getSize());
+		growArray();
+		items[size++] = item;
+		return true;
 	}
 
-	
-	@Test
-	void should_remove_item_to_list() {
-		CustomList<Integer> sut = new CustomArrayList<>();
-		for ( int i = 0; i < 10 ; i ++   ) {
-			sut.add(i);
-		}
+
+	public void growArray() {
+		if(items.length == size) {
+            items =	Arrays.copyOf(items, items.length * 2);		
+		} 
+	}
+
+
+	@Override
+	public boolean add(int index, T item) throws IndexOutOfBoundsException {
 		
-		
-		sut.remove(9);
-		sut.remove(5);
-		sut.add(9,1000);
-		sut.add(2,2000);
-		sut.add(3,3000);
-		//sut.remove(45);
-		Integer expectedResult = sut.get(0);
-		
-		assertEquals(0, expectedResult);
-        assertEquals(2000, sut.get(2));
-        assertEquals(11, sut.getSize());
-		// Index out of bound
-		//sut.add(34,87);
+		    if(isValidIndex(index)) {
+			growArray();
+			
+			if(items[items.length -1] != null && items[items.length -2 ] == null ) {
+			    items[items.length -2 ] = items[items.length -1 ];
 				
-		
+			}
+			System.arraycopy(items, index, items, index+1, items.length - index - 1);
+		    items[index] = item;
+			size++;
+			
+			return true;
+		    } else {
+		    	return false;
+		    }
 	}
-
 	
-	@Test
-	void should_add_item_at_index_to_list() {
-		
-		CustomList<Integer> sut = new CustomArrayList<>();
-
-		for ( int i = 0; i < 10 ; i ++   ) {
-			sut.add(i);
+	public boolean isValidIndex(int index) {
+		try {
+			Objects.checkIndex(index, items.length);
+			
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println(e);
+			return false;
 		}
 		
-		sut.add(4,56);
-		sut.add(6,66);
-		
-		assertEquals(56, sut.get(4));
-		assertEquals(12, sut.getSize());
-		sut.add(86,66);
+		return true;
+	}
+
+	@Override
+	public int getSize() {
+		return size;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public T get(int index) throws IndexOutOfBoundsException {
+		if ( index > size || index < 0 ) {
+        	throw new IndexOutOfBoundsException("Illegal capacity: " + index);
+        }
+		return (T) items[index];
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public T remove(int index) throws IndexOutOfBoundsException {
+        if(isValidIndex(index)) {
+        	
+		System.arraycopy(items, index +1 , items, index, items.length -  index - 1);
+		items = Arrays.copyOf(items, items.length -1 );	
+		size--;	
+		items =	Arrays.copyOf(items, items.length + 1 );
+		return (T) items[index];
+        } else {
+        	return null;
+        }
 	}
 }
