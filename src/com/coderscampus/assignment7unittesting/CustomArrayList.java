@@ -64,12 +64,15 @@ public class CustomArrayList<T> implements CustomList<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T get(int index) throws IndexOutOfBoundsException {
-		if (index > size || index < 0) {
-			throw new IndexOutOfBoundsException("Illegal capacity: " + index);
-		}
-
+		
+	    try {
 		return (T) items[index];
+	    } catch (Exception e) {
+	       throw e;
+	    }
+		
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
