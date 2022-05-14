@@ -36,7 +36,7 @@ class CustomArrayListTest {
 		
 		
 		sut.remove(9);
-		sut.remove(5);
+		sut.remove(6);
 		sut.add(9,1000);
 		sut.add(2,2000);
 		sut.add(3,3000);
@@ -45,7 +45,7 @@ class CustomArrayListTest {
 		
 		assertEquals(0, expectedResult);
         assertEquals(2000, sut.get(2));
-        //assertEquals(11, sut.getSize());
+        assertEquals(11, sut.getSize());
 		// Index out of bound
 		//sut.add(34,87);
 	}
@@ -65,6 +65,6 @@ class CustomArrayListTest {
 		
 		assertEquals(56, sut.get(4));
 		assertEquals(12, sut.getSize());
-		sut.add(86,66);
+		//sut.add(86,66);
 	}
 }
