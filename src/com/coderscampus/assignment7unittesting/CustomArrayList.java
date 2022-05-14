@@ -25,13 +25,19 @@ public class CustomArrayList<T> implements CustomList<T> {
 
 	@Override
 	public boolean add(int index, T item) throws IndexOutOfBoundsException {
-		System.arraycopy(items, index, items, index + 1, items.length - index - 1);
-		items[index] = item;
-		size++;
-		growArray();
-		if (items[items.length - 1] != null) {
-			items[size - 1] = item;
-			items[items.length - 1] = null;
+
+		if (isValidIndex(index)) {
+			growArray();
+			System.arraycopy(items, index, items, index + 1, items.length - index - 1);
+			items[index] = item;
+			for (int i = size; i < items.length; i++) {
+				if (index > size) {
+					items[size] = item;
+					items[index] = null;
+					break;
+				}
+			}
+			size++;
 		}
 
 		return true;
@@ -46,7 +52,7 @@ public class CustomArrayList<T> implements CustomList<T> {
 			System.out.println(e);
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -61,22 +67,21 @@ public class CustomArrayList<T> implements CustomList<T> {
 		if (index > size || index < 0) {
 			throw new IndexOutOfBoundsException("Illegal capacity: " + index);
 		}
-		
+
 		return (T) items[index];
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public T remove(int index) throws IndexOutOfBoundsException {
+
 		if (isValidIndex(index)) {
+
 			System.arraycopy(items, index + 1, items, index, items.length - index - 1);
-			items = Arrays.copyOf(items, items.length - 1);
+			items[size - 1] = null;
 			size--;
-			items = Arrays.copyOf(items, items.length + 1);
-			return (T) items[index];
-		} else {
-			
-			return null;
 		}
+
+		return (T) items[index];
 	}
 }
