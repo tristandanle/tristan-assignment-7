@@ -27,22 +27,17 @@ public class CustomArrayList<T> implements CustomList<T> {
 
 	@Override
 	public boolean add(int index, T item) throws IndexOutOfBoundsException {
-		
-		    if(isValidIndex(index)) {
-			growArray();
-			
-			if(items[items.length -1] != null && items[items.length -2 ] == null ) {
-			    items[items.length -2 ] = items[items.length -1 ];
-				
-			}
 			System.arraycopy(items, index, items, index+1, items.length - index - 1);
-		    items[index] = item;
+			items[index] = item;
 			size++;
+			growArray();
+			if(items[items.length - 1]  != null)  {
+				items[size - 1] = item;
+				items[items.length - 1]  = null;
+		    }
 			
 			return true;
-		    } else {
-		    	return false;
-		    }
+		    
 	}
 	
 	public boolean isValidIndex(int index) {
