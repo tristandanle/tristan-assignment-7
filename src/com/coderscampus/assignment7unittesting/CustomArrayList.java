@@ -64,15 +64,14 @@ public class CustomArrayList<T> implements CustomList<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T get(int index) throws IndexOutOfBoundsException {
-		
-	    try {
-		return (T) items[index];
+
+		try {
+		     return (T) items[index];
 	    } catch (Exception e) {
-	       throw e;
-	    }
+			 throw e;
+		}
 		
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -81,7 +80,7 @@ public class CustomArrayList<T> implements CustomList<T> {
 		if (isValidIndex(index)) {
 
 			System.arraycopy(items, index + 1, items, index, items.length - index - 1);
-			items[size - 1] = null;
+			items[size - 1 ] = null;
 			size--;
 		}
 
