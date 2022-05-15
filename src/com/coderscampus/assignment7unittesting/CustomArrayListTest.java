@@ -34,13 +34,14 @@ class CustomArrayListTest {
 			sut.add(i);
 		}
 		
-		
+		//sut.remove(45);
 		sut.remove(9);
 		sut.remove(6);
 		sut.add(9,1000);
 		sut.add(2,2000);
-		sut.add(3,3000);
-		//sut.remove(45);
+		sut.add(3,2000);
+		
+		
 		Integer expectedResult = sut.get(0);
 		
 		assertEquals(0, expectedResult);
@@ -65,6 +66,6 @@ class CustomArrayListTest {
 		
 		assertEquals(56, sut.get(4));
 		assertEquals(12, sut.getSize());
-		//sut.add(86,66);
+		sut.add(9,11);
 	}
 }
