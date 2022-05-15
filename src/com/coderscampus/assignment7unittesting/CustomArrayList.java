@@ -23,30 +23,9 @@ public class CustomArrayList<T> implements CustomList<T> {
 		}
 	}
 
-	@Override
-	public boolean add(int index, T item) throws IndexOutOfBoundsException {
-
-		if (isValidIndex(index)) {
-			growArray();
-			System.arraycopy(items, index, items, index + 1, items.length - index - 1);
-			items[index] = item;
-			for (int i = size; i < items.length; i++) {
-				if (index > size) {
-					items[size] = item;
-					items[index] = null;
-					break;
-				}
-			}
-			size++;
-		}
-
-		return true;
-
-	}
-
 	public boolean isValidIndex(int index) {
 		try {
-			Objects.checkIndex(index, items.length);
+			Objects.checkIndex(index, size);
 
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println(e);
@@ -54,6 +33,23 @@ public class CustomArrayList<T> implements CustomList<T> {
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean add(int index, T item) throws IndexOutOfBoundsException {
+
+		growArray();
+		if (!(index > size)) {
+			System.arraycopy(items, index, items, index + 1, items.length - index - 1);
+			items[index] = item;
+			size++;
+
+		} else {
+
+			throw new IndexOutOfBoundsException();
+		}
+		return true;
+
 	}
 
 	@Override
@@ -65,12 +61,15 @@ public class CustomArrayList<T> implements CustomList<T> {
 	@Override
 	public T get(int index) throws IndexOutOfBoundsException {
 
-		try {
-		     return (T) items[index];
-	    } catch (Exception e) {
-			 throw e;
+		Object elementIndex = new Object();
+
+		if (isValidIndex(index)) {
+			elementIndex = items[index];
+
 		}
-		
+
+		return (T) elementIndex;
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,10 +77,10 @@ public class CustomArrayList<T> implements CustomList<T> {
 	public T remove(int index) throws IndexOutOfBoundsException {
 
 		if (isValidIndex(index)) {
-
-			System.arraycopy(items, index + 1, items, index, items.length - index - 1);
-			items[size - 1 ] = null;
 			size--;
+			System.arraycopy(items, index + 1, items, index, items.length - index - 1);
+			items[size] = null;
+
 		}
 
 		return (T) items[index];
